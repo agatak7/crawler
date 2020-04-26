@@ -1,6 +1,7 @@
 from link_finder import linkFinder
 from urllib.request import urlopen
 from general import *
+from keyword_finder import find_words
 
 
 class Spider:
@@ -10,20 +11,26 @@ class Spider:
 
     c_file = ''
     q_file = ''
+    interest_file = ''
 
     queue = set([])
     crawl = set([])
+    keywords = ''
+    threshold = 0
 
-    def __init__(self, project, base_url, domain):
+    def __init__(self, project, base_url, keywords, threshold):
         Spider.project = project
-        Spider.domain = domain
+        Spider.domain = ''
         Spider.base_url = base_url
 
         Spider.q_file = Spider.project + '/queue.txt'
         Spider.c_file = Spider.project + '/crawled.txt'
+        Spider.interest_file = Spider.project + '/interest.txt'
 
         Spider.crawl = set()
         Spider.queue = set()
+        Spider.keywords = keywords
+        Spider.threshold = threshold
 
         self.boot()
         self.crawl_page("initial spider", Spider.base_url)
@@ -38,12 +45,15 @@ class Spider:
     @staticmethod
     def crawl_page(thread, url):
         if url not in Spider.crawl:
-            print(thread + " crawling: " + url)
-            print('Queue: ' + str(len(Spider.queue)) + ' Crawled: ' + str(len(Spider.crawl)))
-            Spider.add_to_queue(Spider.get_links(url))
-            Spider.queue.remove(url)
-            Spider.crawl.add(url)
-            Spider.update_files()
+            if find_words(Spider.keywords, url, Spider.threshold):
+                print("interesting words found!")
+                append_file(Spider.interest_file, url)
+                print(thread + " crawling: " + url)
+                print('Queue: ' + str(len(Spider.queue)) + ' Crawled: ' + str(len(Spider.crawl)))
+                Spider.add_to_queue(Spider.get_links(url))
+                Spider.queue.remove(url)
+                Spider.crawl.add(url)
+                Spider.update_files()
 
 
     @staticmethod

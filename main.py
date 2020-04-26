@@ -3,14 +3,15 @@ from queue import Queue
 from spider import Spider
 from general import *
 
-PROJECT_NAME = 'wikipedia'
-HOMEPAGE = 'https://en.wikipedia.org/wiki/Electric_power'
+PROJECT_NAME = 'art'
+HOMEPAGE = 'https://www.in4art.eu/'
 QUEUE_FILE = PROJECT_NAME + '/queue.txt'
 CRAWL_FILE = PROJECT_NAME + '/crawl.txt'
 NO_THREADS = 8
-
+KEYWORDS = {'art', 'sculpture', 'innovation'}
+THRESHOLD = 2
 queue = Queue()
-spider = Spider(PROJECT_NAME, HOMEPAGE, '')
+spider = Spider(PROJECT_NAME, HOMEPAGE,KEYWORDS, THRESHOLD)
 
 def create_workers():
     for _ in range(NO_THREADS):
