@@ -1,2 +1,2 @@
 # crawler
-Simple web crawler, extracts info from sited with useful keywords
+Simple web crawler, extracts info from sites with useful keywords
